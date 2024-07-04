@@ -11,14 +11,14 @@ export default defineNuxtConfig({
   primevue: {
     usePrimeVue: true,
     components: {
-      prefix: 'Prime',
       include: ['Button', 'DataTable', 'CascadeSelect', 'Checkbox', 'ColorPicker', 'DatePicker', 'Editor',
         'FloatLabel', 'IconField', 'InputIcon', 'InputGroup', 'InputGroupAddon', 'InputNumber', 'InputOtp', 'InputText',
         'Knob', 'Listbox', 'MultiSelect', 'Password', 'RadioButton', 'Rating', 'Select', 'SelectButton', 'Slider', 'Textarea',
         'ToggleButton', 'ToggleSwitch', 'SpeedDial', 'SplitButton', 'DataView', 'OrganizationChart', 'Paginator',
         'Timeline', 'Tree', 
         // panel
-        'Accordion', 'Card', 'Divider', 'Fieldset', 'Panel', 'ScrollPanel', 'Splitter', 'Toolbar',
+        'Accordion', 'AccordionPanel', 'AccordionHeader', 'AccordionContent',
+        'Card', 'Divider', 'Fieldset', 'Panel', 'ScrollPanel', 'Splitter', 'Toolbar',
         // step
         'Stepper', 'StepList', 'StepPanels', 'StepItem', 'Step', 'StepPanel',
         // tab
@@ -26,13 +26,25 @@ export default defineNuxtConfig({
         // overlay
         'ConfirmDialog', 'Dialog', 'Drawer', 'DynamicDialog', 'Tooltip',
         // file
-        'FileUpload'
+        'FileUpload',
+        // chart
+        'Chart',
+        // menu
+        'Breadcrumb', 'ContextMenu', 'Dock', 'Menu', 'Menubar', 'MegaMenu', 'PanelMenu', 'TieredMenu',
+        // message 
+        'Message', 'Toast',
+        // media
+        'Carousel', 'Galleria', 'Image',
+        // misc
+        'AnimateOnScroll', 'Avatar', 'AvatarGroup', 'OverlayBadge', 'Badge', 'MeterGroup', 
+        'ScrollTop', 'ProgressBar', 'ProgressSpinner', 'StyleClass', 'Tag', 'Ripple',
+        // terminal
+        'Terminal', 'TerminalService'
       ]
     },
     options: {
       theme: {
           preset: Aura,
-          prefix: 'p',
           darkModeSelector: 'system',
           cssLayer: false
       }
