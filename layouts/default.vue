@@ -26,11 +26,18 @@
         </template>
       </Toolbar>
     </div>
+    <!-- Body -->
+    <div class="w-full p-2">
+      <ClientOnly fallback-tag="span" fallback="Loading comments...">
+        <slot></slot>
+      </ClientOnly>
+    </div>
 
     <!-- Menu List -->
     <Drawer v-model:visible="visible">
       <template #container="{ closeCallback }">
         <div class="flex flex-col h-full">
+          <!-- Menu HEAD-->
           <div class="flex items-center justify-between px-6 pt-4 shrink-0">
             <span class="inline-flex items-center gap-2">
               <svg
@@ -61,6 +68,8 @@
               ></Button>
             </span>
           </div>
+          <Divider />
+          <!-- Menu List -->
           <div class="card overflow-y-auto">
             <Accordion value="0">
               <AccordionPanel value="0">
