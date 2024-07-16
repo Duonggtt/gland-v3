@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type AxiosResponse } from "axios";
 
 export default defineNuxtPlugin({
   name: "api",
@@ -6,7 +6,10 @@ export default defineNuxtPlugin({
     const defaulToken = "";
     const baseUrl = "https://api.g-center.io.vn:8447/gland/api/";
     const debug = true;
-    let respData = null;
+    let respData:
+      | AxiosResponse<any, any>
+      | PromiseLike<AxiosResponse<any, any>>
+      | null = null;
     const { $common } = useNuxtApp();
 
     const defaultData = {
@@ -92,10 +95,147 @@ export default defineNuxtPlugin({
       return [];
     };
 
+    /**
+     * Send a POST api for update data
+     * @param {*} url
+     * @returns
+     */
+    const sendPostApi = async function (
+      url: string,
+      data: any,
+      checkToken = true
+    ) {
+      const test = validateAPI(url);
+      let dataAuthen = checkJwT(url, checkToken);
+      if (test.check) {
+        try {
+          await axios({
+            method: "post",
+            url: dataAuthen.url,
+            responseType: "json",
+            data: data,
+            headers: dataAuthen.header,
+          }).then(function (response) {
+            respData = response;
+            if (debug) {
+              console.log(
+                `%c >>>> Calling POST api: /${url}`,
+                "color: #ff9b29"
+              );
+              console.log("Payload : ", data);
+              console.log("response data :", respData);
+            }
+            return respData;
+          });
+        } catch (error: any) {
+          if (debug) {
+            console.error("Error fetching data:", error);
+            // Common.showError(`Không lấy được thông tin api: ${url}, check log!!`);
+            console.error(url, dataAuthen.header, data);
+          }
+          let check = typeof error.response.data;
+          if (check === "string") {
+            $common.showError(error.response.data);
+          } else {
+            $common.showError(error.response.data.value);
+          }
+          return error.response;
+        }
+      } else {
+        console.error(test.message);
+      }
+      return respData;
+    };
+
+    /**
+     *
+     * @param {*} url
+     * @returns
+     */
+    const sendPutApi = async function (url: string, checkToken = true) {
+      const test = validateAPI(url);
+      let dataAuthen = checkJwT(url, checkToken);
+      if (test.check) {
+        try {
+          await axios({
+            method: "put",
+            url: dataAuthen.url,
+            responseType: "json",
+            headers: dataAuthen.header,
+          }).then(function (response) {
+            respData = response;
+            if (debug) {
+              console.log(`%c >>>> Calling PUT api: /${url}`, "color: #d6bc3a");
+              console.log("response data :", respData);
+            }
+            return respData;
+          });
+        } catch (error: any) {
+          if (debug) {
+            console.error("Error fetching data:", error);
+            $common.showError(
+              `Không lấy được thông tin api: ${url}, check log!!`
+            );
+          }
+        }
+      } else {
+        console.error(test.message);
+      }
+      return {
+        status: "fail",
+        message: test.message,
+      };
+    };
+
+    /**
+     *
+     * @param {*} url
+     * @returns
+     */
+    const sendDeleteApi = async function (url: string, checkToken = true) {
+      const test = validateAPI(url);
+      let dataAuthen = checkJwT(url, checkToken);
+      if (test.check) {
+        try {
+          await axios({
+            method: "delete",
+            url: dataAuthen.url,
+            responseType: "json",
+            headers: dataAuthen.header,
+          }).then(function (response) {
+            respData = response;
+            if (debug) {
+              console.log(
+                `%c >>>> Calling DELETE api: /${url}`,
+                "color: #c93a46"
+              );
+              console.log("response data :", respData);
+            }
+            return respData;
+          });
+        } catch (error: any) {
+          if (debug) {
+            console.error("Error fetching data:", error);
+            // Common.showError(`Không lấy được thông tin api: ${url}, check log!!`);
+          }
+          $common.showError(error.response.data);
+        }
+      } else {
+        console.error(test.message);
+      }
+      return {
+        status: "fail",
+        message: test.message,
+      };
+    };
+    
     return {
       provide: {
         api: {
           sendGetApi,
+          sendPostApi,
+          sendPutApi,
+          sendDeleteApi,
         },
       },
     };
