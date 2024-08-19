@@ -23,7 +23,7 @@
     <!-- Main Body (Sidebar + Content) -->
     <div class="flex flex-1 pt-[70px]">
       <!-- Sidebar Menu List -->
-      <div class="shadow-lg rounded-lg flex-shrink-0 bg-white" style="flex: 2.5">
+      <div class="shadow-lg rounded-lg flex-shrink-0 bg-white" style="flex: 2.5; max-height: calc(100vh - 70px); overflow-y: auto;">
         <div class="p-2">
           <SidebarMenu />
         </div>
