@@ -4,7 +4,7 @@
     <Container>
       <h1 class="text-3xl mb-5">Bảng điều khiển</h1>
       <div>
-        <div class="flex justify-between items-center max-w-full p-6 bg-white border border-gray-200 rounded-xl">
+        <div class="flex justify-between items-center max-w-full p-6 bg-gray-50 dark:bg-gray-950 border border-gray-200 rounded-xl">
           <div class="flex items-center gap-4">
             <Avatar image="https://tecdn.b-cdn.net/img/new/avatars/2.webp" shape="circle" size="large" />
             <div class="font-medium dark:text-white">
@@ -13,7 +13,8 @@
             </div>
           </div>
           <div>
-            <Button label="Đăng xuất" icon="pi pi-sign-out" class="p-button-outlined p-button-sm"  @click="showSuccess"/>
+            <Button label="Đăng xuất" severity="info" icon="pi pi-sign-out" class="p-button-outlined p-button-sm text-white "
+             @click="showSuccess"/>
           </div>
         </div>
       </div>
@@ -31,3 +32,4 @@
     $common.showSuccess('Finish');
   };
 </script>
+

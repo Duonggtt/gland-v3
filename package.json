@@ -22,7 +22,8 @@
     "primevue": "^4.0.0-rc.2",
     "unplugin-vue-components": "^0.27.2",
     "vue": "latest",
-    "vue-advanced-chat": "^2.1.0"
+    "vue-advanced-chat": "^2.1.0",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@primevue/nuxt-module": "^4.0.0-rc.2",

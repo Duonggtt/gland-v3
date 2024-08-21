@@ -4,7 +4,7 @@ export default defineNuxtPlugin({
   name: "api",
   setup() {
     const defaulToken = "";
-    const baseUrl = "https://api.g-center.io.vn:8447/gland/api/";
+    const baseUrl = "https://82.112.230.174:8443/api/";
     const debug = true;
     let respData:
       | AxiosResponse<any, any>

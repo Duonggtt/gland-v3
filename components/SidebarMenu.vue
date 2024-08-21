@@ -1,31 +1,51 @@
 <template>
-  <ul class="space-y-1 text-gray-800">
+  <ul class="space-y-1 text-gray-800 dark:text-white">
     <li v-for="(item, index) in menuItems" :key="index">
       <div
         @click="toggleSubMenu(index)"
         :class="[
           'flex items-center justify-between px-4 py-2 rounded-2xl cursor-pointer transition-all duration-150 w-full', 
-          isActive(index) ? 'bg-gray-100 rounded-2xl' : 'hover:bg-gray-100 rounded-2xl'
+          isActive(index) 
+            ? 'bg-gray-100 dark:bg-gray-700 rounded-2xl' 
+            : 'hover:bg-gray-100 dark:hover:bg-gray-700 rounded-2xl'
         ]"
         :style="isActive(index) ? 'background-color: transparent; cursor: default;' : ''"
       >
         <div class="flex items-center gap-2 w-full">
           <i :class="item.icon" class="text-lg"></i>
-          <span class="text-sm font-medium flex-grow">{{ item.title }}</span>
+          <span 
+            :class="[
+              'text-sm font-medium flex-grow', 
+              isActive(index) ? 'text-gray-800 dark:text-white' : ''
+            ]"
+          >{{ item.title }}</span>
         </div>
         <i v-if="item.children" class="pi" :class="expandedIndices.includes(index) ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
       </div>
       <ul
         v-if="item.children && expandedIndices.includes(index)"
-        class="ml-4 mt-2 space-y-1"
+        :class="item.title === 'Kịch bản' ? 'ml-4 mt-2 space-y-1' : 'mt-2 space-y-1'"
       >
-        <li v-for="(child, childIndex) in item.children" :key="childIndex">
+        <li 
+          v-for="(child, childIndex) in item.children" 
+          :key="childIndex"
+        >
           <div
-            :class="['flex items-center px-4 py-2 rounded-2xl cursor-pointer transition-all duration-150 w-full', isActiveSubMenu(index, childIndex) ? 'bg-gray-200 rounded-2xl' : 'hover:bg-gray-100 rounded-2xl']"
+            :class="[
+              'flex items-center px-4 py-2 rounded-2xl cursor-pointer transition-all duration-150 w-full', 
+              isActiveSubMenu(index, childIndex) 
+                ? 'bg-gray-200 dark:bg-gray-600 rounded-2xl' 
+                : 'hover:bg-gray-100 dark:hover:bg-gray-700 rounded-2xl'
+            ]"
             @click="setActiveSubMenu(index, childIndex)"
           >
             <i :class="child.icon" class="text-lg"></i>
-            <span class="ml-2 text-sm">{{ child.title }}</span>
+            <span 
+              class="ml-2 text-sm"
+              :class="[
+                isActiveSubMenu(index, childIndex) ? 'text-gray-800 dark:text-white' : 'text-gray-800 dark:text-gray-300'
+              ]"
+            >{{ child.title }}</span>
           </div>
         </li>
       </ul>
@@ -65,7 +85,13 @@ const menuItems = ref<MenuItem[]>([
       { title: 'Nhân sự', icon: 'pi pi-user' },
       { title: 'Ví', icon: 'pi pi-wallet' },
       { title: 'Kho dữ liệu', icon: 'pi pi-database' },
-      { title: 'Kịch bản', icon: 'pi pi-sitemap' },
+      { title: 'Kịch bản', icon: 'pi pi-sitemap',
+        children: [
+          { title: 'Nhiệm vụ 1', icon: 'pi pi-file' },
+          { title: 'Nhiệm vụ 2', icon: 'pi pi-file' },
+          { title: 'Nhiệm vụ 3', icon: 'pi pi-file' },
+        ]
+      },
       { title: 'Nhiệm vụ VẬN ĐƠN', icon: 'pi pi-file' },
       { title: 'Nhiệm vụ DUYỆT HỢP ĐỒNG', icon: 'pi pi-file' },
       { title: 'Nhiệm vụ TELESALE', icon: 'pi pi-file' },
@@ -88,7 +114,7 @@ const isActive = (index: number): boolean => {
 };
 
 const setActiveSubMenu = (parentIndex: number, childIndex: number): void => {
-  activeSubIndex.value = { parentIndex, childIndex };
+  activeSubIndex.value = { parentIndex, childIndex };``
 };
 
 const isActiveSubMenu = (parentIndex: number, childIndex: number): boolean => {
