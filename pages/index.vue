@@ -1,31 +1,35 @@
 <template>
-  <h1 class="text-3xl text-blue-400 font-bold underline">
-    Hello World, {{name}}
-  </h1>
-  <div class="card">
-    <Listbox v-model="selectedCity" :options="cities" optionLabel="name" :invalid="selectedCity === null"  class="w-full md:w-56" />
+  <div>
+    <Toast />
+    <Container>
+      <h1 class="text-3xl mb-5">Bảng điều khiển</h1>
+      <div>
+        <div class="flex justify-between items-center max-w-full p-6 bg-gray-50 dark:bg-gray-950 border border-gray-200 rounded-xl">
+          <div class="flex items-center gap-4">
+            <Avatar image="https://tecdn.b-cdn.net/img/new/avatars/2.webp" shape="circle" size="large" />
+            <div class="font-medium dark:text-white">
+              <div class="font-semibold text-gray-600 dark:text-gray-700">Chào</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">G Nguyen</div>
+            </div>
+          </div>
+          <div>
+            <Button label="Đăng xuất" severity="info" icon="pi pi-sign-out" class="p-button-outlined p-button-sm text-white "
+             @click="showSuccess"/>
+          </div>
+        </div>
+      </div>
+    </Container>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+  import { ref } from "vue";
+  import { useNuxtApp } from '#app';
 
-const { $common } = useNuxtApp();
-const { $api } = useNuxtApp();
+  const { $common, $api } = useNuxtApp();
 
-$common.showSuccess('Finish');
-
-$api.sendGetApi('department').then(res => {
-  console.log(res);
-})
-
-const name = 'Hoang Son';
-const selectedCity = ref();
-const cities = ref([
-  { name: 'New York', code: 'NY' },
-  { name: 'Rome', code: 'RM' },
-  { name: 'London', code: 'LDN' },
-  { name: 'Istanbul', code: 'IST' },
-  { name: 'Paris', code: 'PRS' }
-]);
+  const showSuccess = () => {
+    $common.showSuccess('Finish');
+  };
 </script>
+
