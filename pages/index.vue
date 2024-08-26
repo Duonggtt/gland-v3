@@ -14,7 +14,7 @@
           </div>
           <div>
             <Button label="Đăng xuất" severity="info" icon="pi pi-sign-out" class="p-button-outlined p-button-sm text-white "
-             @click="showSuccess"/>
+             @click="logout"/>
           </div>
         </div>
       </div>
@@ -25,11 +25,16 @@
 <script lang="ts" setup>
   import { ref } from "vue";
   import { useNuxtApp } from '#app';
+  import { useRouter  } from '#app';
+
+  const router = useRouter(); 
 
   const { $common, $api } = useNuxtApp();
 
-  const showSuccess = () => {
-    $common.showSuccess('Finish');
+  const logout = () => {
+    console.log("loging out...");
+    $common.removeCookies();
+    router.push("/auth/login");
   };
 </script>
 

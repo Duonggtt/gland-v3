@@ -1,37 +1,25 @@
 <template>
   <div class="min-h-screen flex flex-col">
     <!-- Header -->
-    <div class="w-full bg-white shadow-md fixed top-0 z-10">
-      <Toolbar>
-        <template #start>
-          <div class="flex items-center gap-2 px-4">
-            <h1 class="text-2xl font-bold">Gland</h1>
-          </div>
-        </template>
-
-        <template #end>
-          <div class="flex items-center gap-2 px-4">
-            <Avatar
-              image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png"
-              style="width: 32px; height: 32px"
-            />
-          </div>
-        </template>
-      </Toolbar>
-    </div>
+    <Navbar v-if="!isLoginPage" :theme="currentTheme"/>
 
     <!-- Main Body (Sidebar + Content) -->
-    <div class="flex flex-1 pt-[70px]">
+    <div :class="{'pt-[70px]': !isLoginPage, 'pt-0': isLoginPage}" class="flex flex-1">
       <!-- Sidebar Menu List -->
-      <div class="shadow-lg rounded-lg flex-shrink-0 bg-gray-50 dark:bg-gray-950" style="flex: 2.5; max-height: calc(100vh - 70px); overflow-y: auto;">
+      <div v-if="!isLoginPage" class="shadow-lg rounded-lg flex-shrink-0 bg-gray-50 dark:bg-gray-950 h-screen" style="flex: 2.5; overflow-y: auto;">
         <div class="p-2">
           <SidebarMenu />
         </div>
       </div>
 
       <!-- Main Content -->
-      <div class="flex-grow pl-4 pr-4 pb-4" style="flex: 9">
-        <ClientOnly fallback-tag="span" fallback="Loading content...">
+      <div :class="{'pl-4 pr-4': !isLoginPage, 'p-4': isLoginPage}" class="flex-grow" style="flex: 9">
+        <ClientOnly>
+          <template #fallback>
+            <div class="flex items-center justify-center h-full">
+              <img class="w-64 h-64" src="/static/img/loading.png" alt="loading..." />
+            </div>
+          </template>
           <slot></slot>
         </ClientOnly>
       </div>
@@ -41,6 +29,17 @@
 
 <script setup>
 import SidebarMenu from '@/components/SidebarMenu.vue';
+import Navbar from '@/components/Navbar.vue';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+
+// Kiểm tra xem trang hiện tại có phải là trang login không
+const route = useRoute();
+const isLoginPage = computed(() => route.path === '/auth/login');
+
+const currentTheme = computed(() => {
+  return 'light'; 
+});
 </script>
 
 <style scoped>

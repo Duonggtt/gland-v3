@@ -23,6 +23,7 @@
     "unplugin-vue-components": "^0.27.2",
     "vue": "latest",
     "vue-advanced-chat": "^2.1.0",
+    "vue-router": "^4.4.3",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
