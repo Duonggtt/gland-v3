@@ -1,7 +1,7 @@
 <template>
   <div>
     <Toast />
-    <Container>
+    <div class="p-3">
       <h1 class="text-3xl mb-5">Bảng điều khiển</h1>
       <div>
         <div class="flex justify-between items-center max-w-full p-6 bg-gray-50 dark:bg-gray-950 border border-gray-200 rounded-xl">
@@ -18,7 +18,7 @@
           </div>
         </div>
       </div>
-    </Container>
+    </div>
   </div>
 </template>
 
@@ -29,12 +29,13 @@
 
   const router = useRouter(); 
 
-  const { $common, $api } = useNuxtApp();
+  const { $common } = useNuxtApp();
 
   const logout = () => {
     console.log("loging out...");
     $common.removeCookies();
     router.push("/auth/login");
+    setTimeout
   };
 </script>
 

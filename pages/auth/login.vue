@@ -28,7 +28,7 @@
 import { ref } from 'vue';
 import { useNuxtApp } from '#app';
 import { useStore } from 'vuex'; 
-import type { State } from '~/store';
+import type { State } from '~/store/index';
 import { useRouter } from 'vue-router';
 
 const { $common, $api } = useNuxtApp();
