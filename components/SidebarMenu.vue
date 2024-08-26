@@ -1,7 +1,7 @@
 <template>
   <ul class="space-y-1 text-gray-800 dark:text-white">
     <li v-for="(item, index) in menuItems" :key="index">
-      <div
+      <div v-if="item.title === 'Tổng' ? isAdmin : true"
         @click="toggleSubMenu(index)"
         :class="[
           'flex items-center justify-between px-4 py-2 rounded-2xl cursor-pointer transition-all duration-150 w-full', 
@@ -55,6 +55,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import type { State } from '~/store';
+import { useNuxtApp } from '#app';
+
+const { $common, $api } = useNuxtApp();
 
 // Định nghĩa kiểu dữ liệu cho các mục trong menu
 interface MenuItem {
@@ -98,6 +102,8 @@ const menuItems = ref<MenuItem[]>([
     ],
   },
 ]);
+
+const isAdmin = computed(() => $common.getAdmin());
 
 const toggleSubMenu = (index: number): void => {
   if (expandedIndices.value.includes(index)) {

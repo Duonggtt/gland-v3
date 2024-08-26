@@ -15,6 +15,7 @@
     "chart.js": "^4.4.3",
     "dayjs": "^1.11.12",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "nuxt": "^3.12.3",
     "nuxt-primevue": "^3.0.0",
     "nuxt3-leaflet": "^1.0.13",
@@ -23,6 +24,7 @@
     "unplugin-vue-components": "^0.27.2",
     "vue": "latest",
     "vue-advanced-chat": "^2.1.0",
+    "vue-router": "^4.4.3",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

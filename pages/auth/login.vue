@@ -1,3 +1,4 @@
+
 <template>
   <div class="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-950">
     <Toast />
@@ -25,13 +26,14 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { useNuxtApp } from '#app';
 import { useStore } from 'vuex'; 
-import type { State } from '~/store';
+import type { State } from '~/store/index';
+import { useRouter } from 'vue-router';
 
 const { $common, $api } = useNuxtApp();
-const router = useRouter();
+
+const router = useRouter(); 
 const store = useStore<State>(); 
 
 const username = ref<string>('');
@@ -84,7 +86,7 @@ const checkCookies = () => {
   if (token) {
     $common.showSuccess("Đăng nhập thành công");
     setTimeout(() => {
-      router.push('/');
+      router.push('/auth/login');
     }, 1500);
   }
 };
