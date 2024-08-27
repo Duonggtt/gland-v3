@@ -2,7 +2,7 @@
   <div>
     <Toast />
     <div class="p-3">
-      <h1 class="text-3xl mb-5">Bảng điều khiển</h1>
+      <h1 class="text-3xl mb-5 font-medium text-gray-700">Bảng điều khiển</h1>
       <div>
         <div class="flex justify-between items-center max-w-full p-6 bg-gray-50 dark:bg-gray-950 border border-gray-200 rounded-xl">
           <div class="flex items-center gap-4">

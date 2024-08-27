@@ -13,7 +13,7 @@
       </div>
 
       <!-- Main Content -->
-      <div :class="{'pl-4 pr-4': !isLoginPage, 'p-4': isLoginPage}" class="flex-grow" style="flex: 9">
+      <div :class="{'pl-5 pr-5': !isLoginPage, 'p-4': isLoginPage}" class="flex-grow" style="flex: 9">
         <ClientOnly>
           <template #fallback>
             <div class="flex items-center justify-center h-full">

@@ -1,7 +1,8 @@
 <template>
   <ul class="space-y-1 text-gray-800 dark:text-white">
     <li v-for="(item, index) in menuItems" :key="index">
-      <div v-if="item.title === 'Tổng' ? isAdmin : true"
+      <div
+        v-if="item.title === 'Tổng' ? isAdmin : true"
         @click="toggleSubMenu(index)"
         :class="[
           'flex items-center justify-between px-4 py-2 rounded-2xl cursor-pointer transition-all duration-150 w-full', 
@@ -22,6 +23,7 @@
         </div>
         <i v-if="item.children" class="pi" :class="expandedIndices.includes(index) ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
       </div>
+
       <ul
         v-if="item.children && expandedIndices.includes(index)"
         :class="item.title === 'Kịch bản' ? 'ml-4 mt-2 space-y-1' : 'mt-2 space-y-1'"
@@ -30,7 +32,28 @@
           v-for="(child, childIndex) in item.children" 
           :key="childIndex"
         >
+          <router-link
+            v-if="child.path"
+            :to="child.path"
+            :class="[
+              'flex items-center px-4 py-2 rounded-2xl cursor-pointer transition-all duration-150 w-full', 
+              isActiveSubMenu(index, childIndex) 
+                ? 'bg-gray-200 dark:bg-gray-600 rounded-2xl' 
+                : 'hover:bg-gray-100 dark:hover:bg-gray-700 rounded-2xl'
+            ]"
+            @click="setActiveSubMenu(index, childIndex)"
+          >
+            <i :class="child.icon" class="text-lg"></i>
+            <span 
+              class="ml-2 text-sm"
+              :class="[
+                isActiveSubMenu(index, childIndex) ? 'text-gray-800 dark:text-white' : 'text-gray-800 dark:text-gray-300'
+              ]"
+            >{{ child.title }}</span>
+          </router-link>
+
           <div
+            v-else
             :class="[
               'flex items-center px-4 py-2 rounded-2xl cursor-pointer transition-all duration-150 w-full', 
               isActiveSubMenu(index, childIndex) 
@@ -53,6 +76,7 @@
   </ul>
 </template>
 
+
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { State } from '~/store';
@@ -64,6 +88,7 @@ const { $common, $api } = useNuxtApp();
 interface MenuItem {
   title: string;
   icon: string;
+  path?: string;
   children?: MenuItem[];
 }
 
@@ -76,8 +101,8 @@ const menuItems = ref<MenuItem[]>([
     title: 'Tổng',
     icon: 'pi pi-users',
     children: [
-      { title: 'Nhân sự', icon: 'pi pi-user' },
-      { title: 'Phòng ban', icon: 'pi pi-briefcase' },
+      { title: 'Nhân sự', icon: 'pi pi-user', path: '/gland/main/hr' },
+      { title: 'Phòng ban', icon: 'pi pi-briefcase', path: '/gland/main/dept' },
       { title: 'Ví', icon: 'pi pi-wallet' },
       { title: 'Kho dữ liệu', icon: 'pi pi-database' },
     ],
