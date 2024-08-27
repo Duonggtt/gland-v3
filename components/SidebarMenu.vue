@@ -72,13 +72,14 @@
           </div>
         </li>
       </ul>
+      
+      <hr v-if="item.title === 'Tổng'" class="border-t border-gray-300 dark:border-gray-600 my-2" />
     </li>
   </ul>
 </template>
 
-
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import type { State } from '~/store';
 import { useNuxtApp } from '#app';
 
@@ -130,6 +131,15 @@ const menuItems = ref<MenuItem[]>([
 
 const isAdmin = computed(() => $common.getAdmin());
 
+onMounted(() => {
+  // Mở rộng mục "Tổng" mặc định
+  const tongIndex = menuItems.value.findIndex(item => item.title === 'Tổng');
+  if (tongIndex !== -1 && isAdmin.value) {
+    expandedIndices.value.push(tongIndex);
+    activeIndex.value = tongIndex;
+  }
+});
+
 const toggleSubMenu = (index: number): void => {
   if (expandedIndices.value.includes(index)) {
     expandedIndices.value = expandedIndices.value.filter(i => i !== index);
@@ -145,14 +155,10 @@ const isActive = (index: number): boolean => {
 };
 
 const setActiveSubMenu = (parentIndex: number, childIndex: number): void => {
-  activeSubIndex.value = { parentIndex, childIndex };``
+  activeSubIndex.value = { parentIndex, childIndex };
 };
 
 const isActiveSubMenu = (parentIndex: number, childIndex: number): boolean => {
   return activeSubIndex.value.parentIndex === parentIndex && activeSubIndex.value.childIndex === childIndex;
 };
 </script>
-
-<style scoped>
-/* Custom styles for sidebar items if needed */
-</style>

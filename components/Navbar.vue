@@ -4,7 +4,7 @@
       <Toolbar>
         <template #start>
           <div class="flex items-center gap-2 px-4">
-            <h1 class="text-2xl font-bold">Gland</h1>
+            <a href="/"><h1 class="text-2xl font-bold">Gland</h1></a>
           </div>
         </template>
   

@@ -31,6 +31,8 @@ import { useStore } from 'vuex';
 import type { State } from '~/store/index';
 import { useRouter } from 'vue-router';
 
+const  baseUrl = "https://api.g-center.io.vn:8447/gland/api/";
+
 const { $common, $api } = useNuxtApp();
 
 const router = useRouter(); 
@@ -41,7 +43,7 @@ const password = ref<string>('');
 
 const doLogin = async () => {
   try {
-    const respData = await $api.sendPostApi('authen/signing', {
+    const respData = await $api.sendPostApi(`${baseUrl}` + 'authen/signing', {
       username: username.value,
       password: password.value
     }, false);
@@ -53,7 +55,7 @@ const doLogin = async () => {
 
     if (respData?.data?.userId) {
       localStorage.setItem('userID', respData.data.userId);
-      const roleResponse = await $api.sendGetApi(`role?userId=${respData.data.userId}`);
+      const roleResponse = await $api.sendGetApi(`${baseUrl}` + `role?userId=${respData.data.userId}`);
       if (roleResponse?.value) {
         // Assuming `updateRole` is a method in the Vuex store, adapt if needed
         store.dispatch('updateRole', roleResponse.value.departmentAlloweds);
