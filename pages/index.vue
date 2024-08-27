@@ -32,10 +32,12 @@
   const { $common } = useNuxtApp();
 
   const logout = () => {
-    console.log("loging out...");
-    $common.removeCookies();
-    router.push("/auth/login");
-    setTimeout
+      console.log("loging out...");
+      setTimeout(() => {
+        $common.removeCookies();
+        router.push("/auth/login");
+        $common.showError('Đăng xuất thành công.');
+      }, 1500);
   };
 </script>
 

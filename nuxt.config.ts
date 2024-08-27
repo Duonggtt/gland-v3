@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   primevue: {
     usePrimeVue: true,
     components: {
-      include: ['Button', 'DataTable', 'CascadeSelect', 'Checkbox', 'ColorPicker', 'DatePicker', 'Editor',
+      include: ['Button', 'DataTable', 'Column', 'CascadeSelect', 'Checkbox', 'ColorPicker', 'DatePicker', 'Editor',
         'FloatLabel', 'IconField', 'InputIcon', 'InputGroup', 'InputGroupAddon', 'InputNumber', 'InputOtp', 'InputText',
         'Knob', 'Listbox', 'MultiSelect', 'Password', 'RadioButton', 'Rating', 'Select', 'SelectButton', 'Slider', 'Textarea',
         'ToggleButton', 'ToggleSwitch', 'SpeedDial', 'SplitButton', 'DataView', 'OrganizationChart', 'Paginator',

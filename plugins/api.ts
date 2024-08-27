@@ -1,10 +1,11 @@
 import axios, { type AxiosResponse } from "axios";
+import { v4 as uuidv4 } from "uuid"; // Import hàm tạo UUID
 
 export default defineNuxtPlugin({
   name: "api",
   setup() {
     const defaulToken = "";
-    const baseUrl = "https://api.g-center.io.vn:8447/gland/api/";
+    const baseUrl = ""; //update cho microservice sau
     const debug = true;
     let respData:
       | AxiosResponse<any, any>
@@ -17,6 +18,7 @@ export default defineNuxtPlugin({
       header: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${defaulToken}`,
+        traceId: uuidv4(), // Thêm traceId vào default header
       },
     };
 
@@ -37,12 +39,15 @@ export default defineNuxtPlugin({
 
     const checkJwT = (url: string, checkToken = true) => {
       const jwt = localStorage.getItem("jwt");
+      const traceId = uuidv4(); // Tạo UUID cho traceId
+
       if (jwt || !checkToken) {
         let data = {
           url: baseUrl.concat(url),
           header: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${jwt}`,
+            traceId: traceId, // Thêm traceId vào header
           },
         };
         return data;
@@ -50,32 +55,19 @@ export default defineNuxtPlugin({
       return defaultData;
     };
 
-    /**
-     * Send a GET api for collecting data, pram sẽ nằm trên url
-     * @param {*} url
-     * @returns
-     */
     const sendGetApi = async (url: string, checkToken = true) => {
       const test = validateAPI(url);
       let dataAuthen = checkJwT(url, checkToken);
-      // send api
       if (test.check) {
         try {
-          const response = await axios
-            .get(dataAuthen.url, {
-              headers: dataAuthen.header,
-            })
-            .then(function (response) {
-              respData = response;
-              if (debug) {
-                console.log(
-                  `%c >>>> Calling GET api: /${url}`,
-                  "color: #66ad73"
-                );
-                console.log("response data :", respData);
-              }
-              return respData;
-            });
+          const response = await axios.get(dataAuthen.url, {
+            headers: dataAuthen.header,
+          });
+          respData = response;
+          if (debug) {
+            console.log(`%c >>>> Calling GET api: /${url}`, "color: #66ad73");
+            console.log("response data :", respData);
+          }
           return response.data;
         } catch (error: any) {
           if (debug) {
@@ -95,11 +87,6 @@ export default defineNuxtPlugin({
       return [];
     };
 
-    /**
-     * Send a POST api for update data
-     * @param {*} url
-     * @returns
-     */
     const sendPostApi = async function (
       url: string,
       data: any,
@@ -130,7 +117,6 @@ export default defineNuxtPlugin({
         } catch (error: any) {
           if (debug) {
             console.error("Error fetching data:", error);
-            // Common.showError(`Không lấy được thông tin api: ${url}, check log!!`);
             console.error(url, dataAuthen.header, data);
           }
           let check = typeof error.response.data;
@@ -147,11 +133,6 @@ export default defineNuxtPlugin({
       return respData;
     };
 
-    /**
-     *
-     * @param {*} url
-     * @returns
-     */
     const sendPutApi = async function (url: string, checkToken = true) {
       const test = validateAPI(url);
       let dataAuthen = checkJwT(url, checkToken);
@@ -187,11 +168,6 @@ export default defineNuxtPlugin({
       };
     };
 
-    /**
-     *
-     * @param {*} url
-     * @returns
-     */
     const sendDeleteApi = async function (url: string, checkToken = true) {
       const test = validateAPI(url);
       let dataAuthen = checkJwT(url, checkToken);
@@ -216,9 +192,8 @@ export default defineNuxtPlugin({
         } catch (error: any) {
           if (debug) {
             console.error("Error fetching data:", error);
-            // Common.showError(`Không lấy được thông tin api: ${url}, check log!!`);
+            $common.showError(error.response.data);
           }
-          $common.showError(error.response.data);
         }
       } else {
         console.error(test.message);
@@ -228,7 +203,7 @@ export default defineNuxtPlugin({
         message: test.message,
       };
     };
-    
+
     return {
       provide: {
         api: {
