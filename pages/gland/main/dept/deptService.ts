@@ -33,4 +33,5 @@ export class DepartmentService {
       return { departments: [], totalRecords: 0 };  // Trả về dữ liệu rỗng và số bản ghi là 0 nếu có lỗi
     }
   }
+
 }
