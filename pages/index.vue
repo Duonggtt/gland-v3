@@ -26,7 +26,9 @@
   import { ref } from "vue";
   import { useNuxtApp } from '#app';
   import { useRouter  } from '#app';
-
+  definePageMeta({
+    middleware: 'auth' // Gọi middleware 'auth'
+  });
   const router = useRouter(); 
 
   const { $common } = useNuxtApp();

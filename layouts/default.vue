@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col box-border bg-gray-100">
+  <div class="min-h-screen flex flex-col box-border">
     <!-- Header -->
     <Navbar v-if="!isLoginPage" :theme="currentTheme"/>
 
