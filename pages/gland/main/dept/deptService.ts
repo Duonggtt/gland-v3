@@ -15,22 +15,64 @@ export class DepartmentService {
         `${this.baseUrl}?pageSize=${pageSize}&pageNum=${pageNum}`,
         true
       );
-
-      // Sử dụng response.result mà không có lỗi TypeScript
+  
       if (response.result) {
         return {
           departments: response.result.departments || [],
           totalRecords: response.result.totalPage || 0
         };
       } else {
-        // Nếu dữ liệu không như mong đợi, trả về mặc định
         console.error('Unexpected response format:', response.result);
         return { departments: [], totalRecords: 0 };
       }
       
     } catch (error) {
       console.error('Error fetching data:', error);
-      return { departments: [], totalRecords: 0 };  // Trả về dữ liệu rỗng và số bản ghi là 0 nếu có lỗi
+      return { departments: [], totalRecords: 0 };
+    }
+  }
+  
+
+  async getDepartmentById(departmentId: number): Promise<any> {
+    try {
+      const response: any = await this.$api.sendGetApi(
+        `${this.baseUrl}/${departmentId}`,
+        true
+      );
+
+      // Sử dụng response.result mà không có lỗi TypeScript
+      if (response.result) {
+        return response.result;
+      } else {
+        console.error('Unexpected response format:', response.result);
+        return null;
+      }
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      return null;
+    }
+  }
+
+  async createDepartment(department: any): Promise<any> {
+    try {
+      const response: any = await this.$api.sendPostApi(
+        this.baseUrl,
+        department,
+        true
+      );
+
+      // Sử dụng response.result mà không có lỗi TypeScript
+      if (response.result) {
+        return response.result;
+      } else {
+        console.error('Unexpected response format:', response.result);
+        return null;
+      }
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      return null;
     }
   }
 

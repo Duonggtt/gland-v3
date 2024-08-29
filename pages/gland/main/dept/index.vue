@@ -31,8 +31,16 @@
               icon="pi pi-filter" 
               severity="info" text
               class="p-button-sm text-white"
+              @click="filterVisible = true"
             />
           </div>
+          <Dialog :visible="filterVisible" modal :closable="false" header="Lọc theo..." :style="{ width: '25rem' }">
+            
+            <div class="flex justify-items-end gap-2">
+                <Button type="button" label="Hủy" severity="danger" @click="filterVisible = false"></Button>
+                <Button type="button" label="Lọc" severity="secondary" @click="filterVisible = false"></Button>
+            </div>
+          </Dialog>
         </div>
         
         <hr class="my-4 border-gray-200" />
@@ -40,19 +48,15 @@
         <!-- Table -->
         <DataTable 
           :value="departments"
-          :selection="selectedDepartments"
-          @selectionChange="onSelectionChange"
-          tableStyle="min-width: 50rem"
-          paginator 
-          :rows="10" 
-          :totalRecords="totalRecords" 
+          :paginator="true"
+          :rows="pageSize"
+          :totalRecords="totalRecords"
+          :first="first"
           :lazy="true"
-          :first="first" 
           @page="onPageChange"
         >
               <!-- Checkbox Column -->
               <Column selectionMode="multiple" headerStyle="width: 3em; text-align: center;"></Column>
-
               <Column field="name" header="Tên" headerStyle="text-align: center;"></Column>
               <Column field="note" header="Ghi chú" headerStyle="text-align: center;"></Column>
               <Column field="createdAt" header="Ngày tạo" headerStyle="text-align: center;"></Column>
@@ -133,12 +137,12 @@
           <!-- Tên Field -->
           <div>
             <label for="name" class="block font-semibold mb-2">Tên<span class="text-red-500">*</span></label>
-            <InputText id="name" v-model="department.name" class="w-full h-10" placeholder="Nhập tên phòng ban" />
+            <InputText id="name" v-model="newDepartment.name" class="w-full h-10" placeholder="Nhập tên phòng ban" />
           </div>
           <!-- Note Field -->
           <div>
             <label for="note" class="block font-semibold mb-2">Note</label>
-            <InputText id="note" v-model="department.note" class="w-full h-10" placeholder="Nhập ghi chú" />
+            <InputText id="note" v-model="newDepartment.note" class="w-full h-10" placeholder="Nhập ghi chú" />
           </div>
         </div>
       </div>
@@ -157,6 +161,10 @@
   import { DepartmentService } from '@/pages/gland/main/dept/deptService';
   import { useNuxtApp } from '#app';
 
+  definePageMeta({
+    middleware: 'auth' 
+  });
+  
   interface Department {
     id: number;
     name: string;
@@ -172,13 +180,21 @@
   const departments = ref<Department[]>([]);
   const totalRecords = ref<number>(0);
   const first = ref<number>(0);
-  const pageSize = ref<number>(10);
+  const pageSize = ref<number>(5);
   const state = ref<string>('default');
   const selectedDepartmentId = ref<number | null>(null); 
   const deptIdToDelete= ref<number | null>(null); 
   const selectedDepartments = ref<Department[]>([]);
   const visible = ref(false);
+  const filterVisible = ref(false);
   const department = ref<Department>({
+    id: 0, 
+    name: '',
+    note: '',
+    createdAt: new Date().toISOString(),
+  });
+
+  const newDepartment = ref<Department>({
     id: 0, 
     name: '',
     note: '',
@@ -201,19 +217,47 @@
   };
 
   const createNewDepartment = () => {
-    console.log('Create new department:', department.value);
-    $common.showSuccess('Tạo phòng ban mới thành công.');
-    resetData();
-  };
+    if (!newDepartment.value.name.trim()) {
+      $common.showError('Tên phòng ban không được để trống.');
+      return;
+    }
 
-  const createAndContinue = () => {
-    $common.showSuccess('Tạo phòng ban mới thành công.');
+    if(departments.value.find(department => department.name === newDepartment.value.name)) {
+      $common.showError('Tên phòng ban đã tồn tại.');
+      return;
+    }
+
+    departmentService.createDepartment(newDepartment.value).then(data => {
+      console.log('Create new department:', newDepartment.value);
+      $common.showSuccess('Tạo phòng ban mới thành công.');
+      resetData();
+    });
     setTimeout(() => {
+      loadDepartments();
       state.value = 'default';
     }, 1500);
   };
 
+  const createAndContinue = () => {
+    if (!newDepartment.value.name.trim()) {
+      $common.showError('Tên phòng ban không được để trống.');
+      return;
+    }
+
+    if(departments.value.find(department => department.name === newDepartment.value.name)) {
+      $common.showError('Tên phòng ban đã tồn tại.');
+      return;
+    }
+
+    departmentService.createDepartment(newDepartment.value).then(data => {
+      console.log('Create new department:', newDepartment.value);
+      $common.showSuccess('Tạo phòng ban mới thành công.');
+      resetData();
+    });
+  };
+
   const goBack = () => {
+    loadDepartments();
     state.value = 'default';
   };
 
@@ -226,32 +270,39 @@
   };
 
   const loadDepartments = (page: number = 0) => {
-    const pageNum = page;
-    const params = { pageSize: pageSize.value, pageNum };
+    const params = { pageSize: pageSize.value, pageNum: page };
 
     departmentService.getDepartments(params.pageSize, params.pageNum).then(data => {
       console.log('dpt: ', data);
-      // Format ngày tạo trước khi lưu vào danh sách
       departments.value = data.departments.map((department: Department) => ({
         ...department,
-        createdAt: formatDate(department.createdAt), // Định dạng lại ngày giờ
+        createdAt: formatDate(department.createdAt),
       }));
       totalRecords.value = data.totalRecords;
     });
   };
 
 
+
   const onPageChange = (event: any) => {
-    first.value = event.first;
-    loadDepartments(event.page);
+    console.log("Page change event:", event);
+    first.value = event.first;  
+    const currentPage = Math.floor(first.value / pageSize.value);  
+    loadDepartments(currentPage);  
   };
+
 
   // Hàm xử lý thay đổi selection
   const onSelectionChange = (e: { value: Department[] }) => {
     selectedDepartments.value = e.value;
-  };
+    console.log("Selected departments:", selectedDepartments.value);
+};
 
   const updateDepartment = () => {
+    if (!department.value.name.trim()) {
+      $common.showError('Tên phòng ban không được để trống.');
+      return;
+    }
     console.log('Update department:', department.value);
     $common.showSuccess('Sửa phòng ban thành công.');  
   };
@@ -264,13 +315,14 @@
   };
 
   const loadDepartmentDetails = (id: number) => {
-    //get details of department
+    departmentService.getDepartmentById(id).then(data => {
+      department.value = data;
+    });
   };
 
   const createDepartment = () => {
     console.log("Create department:");
     state.value = 'create'; 
-
   };
 
   const deleteDepartment = (id: number) => {
