@@ -104,8 +104,8 @@ const menuItems = ref<MenuItem[]>([
     children: [
       { title: 'Nhân sự', icon: 'pi pi-user', path: '/gland/main/hr' },
       { title: 'Phòng ban', icon: 'pi pi-briefcase', path: '/gland/main/dept' },
-      { title: 'Ví', icon: 'pi pi-wallet' },
-      { title: 'Kho dữ liệu', icon: 'pi pi-database' },
+      { title: 'Ví', icon: 'pi pi-wallet', path: '/gland/main/wallet' },
+      { title: 'Kho dữ liệu', icon: 'pi pi-database', path: '/gland/main/repo' },
     ],
   },
   {

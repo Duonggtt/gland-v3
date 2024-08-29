@@ -1,7 +1,7 @@
 
 <template>
     <div>
-      trang hr
+      trang repo
     </div>
   </template>
   

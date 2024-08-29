@@ -164,7 +164,7 @@
   definePageMeta({
     middleware: 'auth' 
   });
-  
+
   interface Department {
     id: number;
     name: string;
@@ -321,7 +321,6 @@
   };
 
   const createDepartment = () => {
-    console.log("Create department:");
     state.value = 'create'; 
   };
 

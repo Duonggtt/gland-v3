@@ -1,7 +1,7 @@
 
 <template>
     <div>
-      trang hr
+      trang wallet
     </div>
   </template>
   
