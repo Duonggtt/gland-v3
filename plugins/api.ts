@@ -133,40 +133,51 @@ export default defineNuxtPlugin({
       return respData;
     };
 
-    const sendPutApi = async function (url: string, checkToken = true) {
+    const sendPutApi = async function (
+      url: string, 
+      data: any, 
+      checkToken = true
+    ) {
       const test = validateAPI(url);
       let dataAuthen = checkJwT(url, checkToken);
+      
       if (test.check) {
         try {
-          await axios({
+          const response = await axios({
             method: "put",
             url: dataAuthen.url,
             responseType: "json",
+            data: data, // Truyền dữ liệu vào PUT request
             headers: dataAuthen.header,
-          }).then(function (response) {
-            respData = response;
-            if (debug) {
-              console.log(`%c >>>> Calling PUT api: /${url}`, "color: #d6bc3a");
-              console.log("response data :", respData);
-            }
-            return respData;
           });
+    
+          respData = response;
+          if (debug) {
+            console.log(`%c >>>> Calling PUT api: /${url}`, "color: #d6bc3a");
+            console.log("Payload : ", data);
+            console.log("response data :", respData);
+          }
+          return respData; // Trả về kết quả sau khi gọi API thành công
+    
         } catch (error: any) {
           if (debug) {
             console.error("Error fetching data:", error);
+            console.error(url, dataAuthen.header, data);
             $common.showError(
               `Không lấy được thông tin api: ${url}, check log!!`
             );
           }
+          return error.response; // Trả về phản hồi lỗi nếu có
         }
       } else {
         console.error(test.message);
+        return {
+          status: "fail",
+          message: test.message,
+        };
       }
-      return {
-        status: "fail",
-        message: test.message,
-      };
     };
+    
 
     const sendDeleteApi = async function (url: string, checkToken = true) {
       const test = validateAPI(url);

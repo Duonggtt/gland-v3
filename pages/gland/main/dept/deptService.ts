@@ -66,12 +66,50 @@ export class DepartmentService {
       if (response.result) {
         return response.result;
       } else {
-        console.error('Unexpected response format:', response.result);
         return null;
       }
       
     } catch (error) {
       console.error('Error fetching data:', error);
+      return null;
+    }
+  }
+
+  async updateDepartment(departmentId: number, department: any): Promise<any> {
+    try {
+      const response: any = await this.$api.sendPutApi(
+        `${this.baseUrl}/${departmentId}`,
+        department,
+        true
+      );
+
+      if (response.result) {
+        return response.result;
+      } else {
+        return null;
+      }
+      
+    } catch (error) {
+      console.error('Error updating department:', error);
+      return null;
+    }
+  }
+
+  async deleteDepartment(departmentId: number): Promise<any> {
+    try {
+      const response: any = await this.$api.sendDeleteApi(
+        `${this.baseUrl}/${departmentId}`,
+        true
+      );
+
+      if (response.result) {
+        return response.result;
+      } else {
+        return null;
+      }
+      
+    } catch (error) {
+      console.error('Error deleting department:', error);
       return null;
     }
   }

@@ -66,6 +66,16 @@ const doLogin = async () => {
       $common.showSuccess(`Chào mừng ${username.value} quay trở lại`);
       localStorage.setItem("jwt", respData.data.accessToken);
       $common.resetCookies(respData.data.accessToken, 60);
+
+      // Set up a timeout to check token expiration or refresh
+      const decodedToken = JSON.parse(atob(respData.data.accessToken.split('.')[1]));
+      const expiryTime = decodedToken.exp * 1000;
+      const timeoutDuration = expiryTime - Date.now();
+
+      setTimeout(() => {
+        $common.showWarning('Phiên của bạn sắp hết hạn. Vui lòng đăng nhập lại.');
+        router.push('/auth/login');
+      }, timeoutDuration);
       
       if (respData.data.admin !== undefined) {
         $common.setAdmin(respData.data.admin, 60);

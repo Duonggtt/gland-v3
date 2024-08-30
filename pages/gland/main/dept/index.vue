@@ -303,8 +303,16 @@
       $common.showError('Tên phòng ban không được để trống.');
       return;
     }
+    departmentService.updateDepartment(department.value.id, department.value).then(data => {
+      console.log('Updating new department:', department.value);
+      $common.showSuccess('Sửa phòng ban thành công.');
+      resetData();
+    });
     console.log('Update department:', department.value);
-    $common.showSuccess('Sửa phòng ban thành công.');  
+    setTimeout(() => {
+      loadDepartments();
+      state.value = 'default';
+    }, 1500);
   };
 
   const editDepartment = (id: number) => {
@@ -330,8 +338,21 @@
   };
 
   const confirmDelete = () => {
-    console.log("Confirm delete department with ID:", deptIdToDelete.value);
-    visible.value = false;
+    if (deptIdToDelete.value !== null) {
+      departmentService.deleteDepartment(deptIdToDelete.value).then(data => {
+          $common.showSuccess('Xóa phòng ban thành công.');
+          loadDepartments(); 
+      }).catch(error => {
+        console.error("Error deleting department:", error);
+        $common.showError('Đã xảy ra lỗi trong quá trình xóa phòng ban.');
+      }).finally(() => {
+        visible.value = false; 
+      });
+    } else {
+      $common.showError('Không tìm thấy ID phòng ban.');
+      visible.value = false;
+    }
   };
+
   
 </script>

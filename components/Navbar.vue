@@ -1,5 +1,6 @@
 <template>
   <div class="w-full bg-white shadow-md fixed top-0 z-10">
+    <Toast />
     <Toolbar>
       <template #start>
         <div class="flex items-center gap-2 px-4">
@@ -32,7 +33,8 @@ import { useRouter } from 'vue-router';
 import Avatar from 'primevue/avatar';
 import Menu from 'primevue/menu';
 import Toolbar from 'primevue/toolbar';
-// import useTheme from 'path-to-your-theme-hook'; 
+import { useNuxtApp } from '#app';
+const { $common, $api } = useNuxtApp();
 
 const router = useRouter();
 
@@ -66,8 +68,8 @@ const menuItems = ref([
       setTimeout(() => {
         $common.removeCookies();
         router.push("/auth/login");
-        $common.showError('Đăng xuất thành công.');
-      }, 1500);
+      }, 1000);
+      $common.showSuccess('Đăng xuất thành công.');
     },
   },
 ]);

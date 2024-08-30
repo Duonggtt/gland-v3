@@ -27,7 +27,7 @@
   import { useNuxtApp } from '#app';
   import { useRouter  } from '#app';
   definePageMeta({
-    middleware: 'auth' // Gọi middleware 'auth'
+    middleware: 'auth'
   });
   const router = useRouter(); 
 
@@ -38,8 +38,8 @@
       setTimeout(() => {
         $common.removeCookies();
         router.push("/auth/login");
-        $common.showError('Đăng xuất thành công.');
-      }, 1500);
+      }, 1000);
+      $common.showSuccess('Đăng xuất thành công.');
   };
 </script>
 
