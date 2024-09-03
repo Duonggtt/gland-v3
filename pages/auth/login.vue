@@ -28,10 +28,10 @@
 import { ref } from 'vue';
 import { useNuxtApp } from '#app';
 import { useStore } from 'vuex'; 
-import type { State } from '~/store/index';
+import type { State } from '~/store';
 import { useRouter } from 'vue-router';
 
-const  baseUrl = "https://api.g-center.io.vn:8447/gland/api/";
+const  baseUrl = "http://apiv2.g-center.io.vn:8888/";
 
 const { $common, $api } = useNuxtApp();
 
@@ -43,7 +43,7 @@ const password = ref<string>('');
 
 const doLogin = async () => {
   try {
-    const respData = await $api.sendPostApi(`${baseUrl}` + 'authen/signing', {
+    const respData = await $api.sendPostApi(`${baseUrl}` + 'identity/auth/token', {
       username: username.value,
       password: password.value
     }, false);
@@ -53,22 +53,22 @@ const doLogin = async () => {
       return;
     }
 
-    if (respData?.data?.userId) {
-      localStorage.setItem('userID', respData.data.userId);
-      const roleResponse = await $api.sendGetApi(`${baseUrl}` + `role?userId=${respData.data.userId}`);
-      if (roleResponse?.value) {
-        // Assuming `updateRole` is a method in the Vuex store, adapt if needed
-        store.dispatch('updateRole', roleResponse.value.departmentAlloweds);
-      }
-    }
+    // if (respData?.data?.userId) {
+    //   localStorage.setItem('userID', respData.data.userId);
+    //   const roleResponse = await $api.sendGetApi(`${baseUrl}` + `role?userId=${respData.data.userId}`);
+    //   if (roleResponse?.value) {
+    //     // Assuming `updateRole` is a method in the Vuex store, adapt if needed
+    //     store.dispatch('updateRole', roleResponse.value.departmentAlloweds);
+    //   }
+    // }
 
-    if (respData?.data?.accessToken) {
+    if (respData?.data?.result.token) {
       $common.showSuccess(`Chào mừng ${username.value} quay trở lại`);
-      localStorage.setItem("jwt", respData.data.accessToken);
-      $common.resetCookies(respData.data.accessToken, 60);
+      localStorage.setItem("jwt", respData.data.result.token);
+      $common.resetCookies(respData.data.result.token, 60);
 
       // Set up a timeout to check token expiration or refresh
-      const decodedToken = JSON.parse(atob(respData.data.accessToken.split('.')[1]));
+      const decodedToken = JSON.parse(atob(respData.data.result.token.split('.')[1]));
       const expiryTime = decodedToken.exp * 1000;
       const timeoutDuration = expiryTime - Date.now();
 
@@ -77,12 +77,12 @@ const doLogin = async () => {
         router.push('/auth/login');
       }, timeoutDuration);
       
-      if (respData.data.admin !== undefined) {
-        $common.setAdmin(respData.data.admin, 60);
+      if (respData.data.result.admin !== undefined) {
+        $common.setAdmin(respData.data.result.admin, 60);
       }
-      if (respData.data.role !== undefined) {
-        $common.setRole(respData.data.role, 60);
-      }
+      // if (respData.data.result.role !== undefined) {
+      //   $common.setRole(respData.data.role, 60);
+      // }
 
       setTimeout(() => {
         router.push('/');
